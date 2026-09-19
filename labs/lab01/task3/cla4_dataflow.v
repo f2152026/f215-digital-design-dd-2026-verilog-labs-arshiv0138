@@ -24,6 +24,6 @@ module cla4_dataflow(
   wire [3:0] p, g;
   wire c1, c2, c3;
 
-  // TODO: your dataflow (assign) statements go here.
+  assign {cout, sum} = a + b + cin;
 
 endmodule
