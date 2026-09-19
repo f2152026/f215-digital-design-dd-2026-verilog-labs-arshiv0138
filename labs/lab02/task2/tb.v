@@ -1,11 +1,25 @@
 // tb.v
-// Starter testbench template -- YOU complete this file.
+// Testbench for the parameterized LUT (ROM).
+
+`timescale 1ns / 1ps
 
 module tb;
 
-  // TODO: declare the inputs and outputs
+  localparam WIDTH = 8;
+  localparam DEPTH = 4;
 
-  // TODO: instantiate DUT here
+  reg  [$clog2(DEPTH)-1:0] t_sel;
+  wire [WIDTH-1:0]         t_dout;
+
+  integer i;
+
+  lut #(
+    .WIDTH (WIDTH),
+    .DEPTH (DEPTH)
+  ) DUT (
+    .sel  (t_sel),
+    .dout (t_dout)
+  );
 
   // Waveform dump configuration (DO NOT CHANGE)
   string vcd_file;
@@ -17,11 +31,22 @@ module tb;
   end
 
   initial begin
-    // TODO: apply different input combinations
+    t_sel = 0;
 
+    $display("------------------------------");
+    $display(" Time   sel | dout | Expected");
+    $display("------------------------------");
+
+    for (i = 0; i < DEPTH; i = i + 1) begin
+      t_sel = i;
+      #10;
+      $display("%5t    %0d  |  %0d   |    %0d   %s",
+               $time, t_sel, t_dout, i*i,
+               (t_dout === i*i) ? "PASS" : "FAIL");
+    end
+
+    $display("------------------------------");
+    #10 $finish;
   end
-
-  initial
-    $monitor($time, " I0=%b I1=%b S=%b | Y=%b", t_i0, t_i1, t_s, t_y); // change as required
 
 endmodule
